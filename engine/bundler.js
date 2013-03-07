@@ -226,6 +226,7 @@ var Bundle = function () {
 
   // meteor release manifest
   self.releaseManifest = null;
+  self.release = null;
 
   // map from environment, to list of filenames
   self.js = {client: [], server: []};
@@ -718,6 +719,9 @@ _.extend(Bundle.prototype, {
       }
     }
 
+    if (self.release && self.release !== 'none')
+      app_json.release = self.release;
+
     fs.writeFileSync(path.join(build_path, 'app.json'),
                      JSON.stringify(app_json, null, 2));
     fs.writeFileSync(path.join(build_path, 'dependencies.json'),
@@ -781,6 +785,7 @@ exports.bundle = function (app_dir, output_path, options) {
 
     var bundle = new Bundle;
     bundle.releaseManifest = warehouse.releaseManifestByVersion(options.release);
+    bundle.release = options.release;
     bundle.appDir = app_dir;
 
     // our release manifest is set, let's now load the app
